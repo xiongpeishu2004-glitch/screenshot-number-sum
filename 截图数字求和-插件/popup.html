@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<title>截图数字求和</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+    width: 340px;
+    margin: 0;
+    padding: 16px;
+    color: #1a1a1a;
+    background: #fafafa;
+  }
+  h1 { font-size: 16px; font-weight: 600; margin: 0 0 4px; }
+  .subtitle { font-size: 12px; color: #777; margin-bottom: 16px; }
+  #drop {
+    border: 1.5px dashed #ccc;
+    border-radius: 10px;
+    padding: 20px 12px;
+    text-align: center;
+    background: #fff;
+  }
+  #drop p { font-size: 13px; color: #666; margin: 0 0 10px; }
+  input[type="file"] { display: block; margin: 0 auto; font-size: 12px; }
+  #preview { margin: 12px 0; display: none; }
+  #thumbStrip { display: flex; gap: 10px; overflow-x: auto; padding: 4px 4px 8px; }
+  .thumbWrap { position: relative; flex-shrink: 0; }
+  .thumbWrap img {
+    width: 56px;
+    height: 56px;
+    object-fit: cover;
+    border-radius: 6px;
+    border: 1px solid #e0e0e0;
+    cursor: pointer;
+    display: block;
+    transition: opacity 0.15s;
+  }
+  .thumbWrap.excluded img { opacity: 0.35; }
+  .thumbCheck {
+    position: absolute;
+    top: -4px;
+    left: -4px;
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+  }
+  .thumbDel {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #fff;
+    border: 1px solid #ccc;
+    color: #999;
+    font-size: 11px;
+    line-height: 14px;
+    text-align: center;
+    cursor: pointer;
+    padding: 0;
+  }
+  #lightbox {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.75);
+    z-index: 999;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  #lightbox img {
+    max-width: 100%;
+    max-height: 90%;
+    border-radius: 6px;
+  }
+  #status { font-size: 12px; color: #777; margin: 8px 0; display: none; }
+  #results { display: none; }
+  #results p.label { font-size: 12px; color: #777; margin: 14px 0 6px; }
+  #numlist { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; max-height: 120px; overflow-y: auto; }
+  #numlist label {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background: #f0f0f0;
+    border-radius: 6px;
+    padding: 4px 8px;
+    font-size: 12px;
+    cursor: pointer;
+  }
+  #totalBox {
+    background: #f0f0f0;
+    border-radius: 10px;
+    padding: 14px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  #totalBox .totalLabel { font-size: 12px; color: #777; }
+  #total { font-size: 32px; font-weight: 700; line-height: 1.1; }
+  #copyBtn {
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 6px;
+    border: 1px solid #ddd;
+    background: #fff;
+    color: #888;
+    cursor: pointer;
+  }
+  footer { margin-top: 16px; font-size: 11px; color: #999; text-align: center; }
+</style>
+</head>
+<body>
+
+<h1>截图数字求和</h1>
+<p class="subtitle">粘贴 (Ctrl/Cmd+V) 或选择图片，自动识别数字并求和</p>
+
+<div id="drop">
+  <p>点击选择图片（可多选），或在此处粘贴</p>
+  <input type="file" id="file" accept="image/*" multiple />
+</div>
+
+<div id="preview">
+  <div id="thumbStrip"></div>
+</div>
+
+<div id="lightbox">
+  <img id="lightboxImg" alt="放大预览" />
+</div>
+
+<div id="status"></div>
+
+<div id="results">
+  <p class="label">识别到的数字（可编辑，取消勾选可排除）<span id="imgCountLabel" style="color:#aaa;"></span></p>
+  <div id="numlist"></div>
+  <button id="addBtn" type="button" style="margin-bottom: 12px; font-size: 12px; padding: 4px 10px;">+ 手动添加</button>
+  <button id="selectAllBtn" type="button" style="margin-bottom: 12px; margin-left: 6px; font-size: 12px; padding: 4px 10px;">全选</button>
+  <button id="clearBtn" type="button" style="margin-bottom: 12px; margin-left: 6px; font-size: 12px; padding: 4px 10px;">清空重来</button>
+  <div id="totalBox">
+    <span class="totalLabel">合计</span>
+    <span style="display:flex; align-items:center; gap:10px;">
+      <span id="total">0</span>
+      <button id="copyBtn" type="button">复制</button>
+    </span>
+  </div>
+</div>
+
+<footer>本地 OCR · 全程离线运行</footer>
+
+<script src="tesseract.min.js"></script>
+<script src="popup.js"></script>
+</body>
+</html>
