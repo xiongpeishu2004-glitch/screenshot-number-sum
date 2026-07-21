@@ -1,2 +1,36 @@
-# screenshot-number-sum
-截图数字求和 Chrome 插件 —— 本地 OCR 识别截图中的数字并自动求和，支持批量多图、结果可编辑，全程离线不上传数据 Chrome extension that OCRs a screenshot and sums the numbers in it — fully offline, batch multi-image support, editable results
+# screenshot-number-sum 截图求和
+截图数字求和 Chrome 插件 —— 本地 OCR 识别截图中的数字并自动求和，支持批量多图、结果可编辑，全程离线不上传数据 
+Chrome extension that OCRs a screenshot and sums the numbers in it — fully offline, batch multi-image support, editable results
+## 特点
+
+- **完全离线运行**：OCR 引擎和识别模型全部打包在扩展本地，不会把你的截图上传到任何服务器
+- **批量处理**：一次可以粘贴或选择多张截图，识别结果自动累加求和
+- **缩略图存档**：每张处理过的截图都会保留缩略图，点击可放大查看核对
+- **按图排除**：某张截图识别有误或不想算进去，直接在缩略图上取消勾选（排除但保留）或点 "×"（彻底删除该图及其数字）
+- **结果可编辑**：任何一个识别出的数字都能直接改，也能手动增删单个数字
+- **一键复制合计**：算好的总数一键复制到剪贴板
+- **侧边栏常驻**：不会因为切换标签页而把识别结果清空
+
+## 安装方法（开发者模式加载）
+
+1. 下载并解压本仓库（点击右上角绿色 `Code` 按钮 → `Download ZIP`）
+2. 打开 Chrome，地址栏输入 `chrome://extensions`
+3. 打开右上角"开发者模式"
+4. 点击"加载已解压的扩展程序"，选择解压出来的文件夹
+5. 点击工具栏图标，打开侧边栏；粘贴截图（Ctrl/Cmd+V）或点击选择图片即可，支持一次多选/多次粘贴累加
+
+## 技术实现
+
+- OCR 使用 [Tesseract.js](https://github.com/naptha/tesseract.js)（含语言包，全部本地打包，不依赖任何远程接口）
+- Manifest V3 扩展，使用 Side Panel API 保持面板常驻
+- 纯前端实现，没有后端、没有数据收集
+
+## 局限
+
+- 手写体、花体字、密集小字识别率有限
+- 数字之间如果用"-"分隔，可能被误判为负号（可手动编辑修正）
+- 目前不支持按数学表达式求值（如 `12+34-5`），只是把所有识别到的数字直接相加
+
+## License
+
+MIT，见 [LICENSE](./LICENSE)。
